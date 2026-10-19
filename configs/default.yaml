@@ -1,0 +1,44 @@
+# Paths
+data_dir: data/nih-chestxray14     # Data_Entry_2017.csv, test_list.txt, images_*/images/*.png
+output_dir: outputs
+
+# Single-label images from these findings form the multiclass task.
+classes:
+  - No Finding
+  - Atelectasis
+  - Effusion
+  - Infiltration
+  - Pneumonia
+  - Pneumothorax
+
+image_size: 224
+val_fraction: 0.1
+seed: 42
+
+classifier:
+  pretrained: true          # ImageNet weights for DenseNet-121
+  batch_size: 32
+  max_per_class: 4000       # undersample the very large majority classes
+  head_epochs: 3
+  head_lr: 1.0e-3
+  finetune_epochs: 15
+  finetune_lr: 1.0e-4
+
+gan:
+  image_size: 128
+  latent_dim: 128
+  batch_size: 64
+  epochs: 150
+  lr: 2.0e-4
+  # Synthetic images added to the training split for under-represented classes.
+  synthetic_per_class:
+    Pneumonia: 2500
+    Pneumothorax: 1500
+    Atelectasis: 1000
+
+qsvm:
+  n_qubits: 6
+  reps: 2
+  C: 1.0
+  train_samples: 300
+  test_samples: 150
